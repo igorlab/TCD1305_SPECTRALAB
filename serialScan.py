@@ -1,11 +1,10 @@
-
 def scan_serial_ports():
     """
     Повертає список доступних послідовних портів (COM на Windows).
     Працює без зовнішніх залежностей:
     - Windows: читає з реєстру HKLM\\HARDWARE\\DEVICEMAP\\SERIALCOMM
     - Linux: перевіряє стандартні /dev/tty* шаблони
-    - macOS: перевіряє /dev/tty.* та /dev/cu.*
+    - macOS: перевіряє лише /dev/cu.*
     """
     import sys
     import os
@@ -42,7 +41,7 @@ def scan_serial_ports():
     # Unix-подібні системи
     patterns = []
     if sys.platform == 'darwin':
-        patterns = ['/dev/tty.*', '/dev/cu.*']
+        patterns = ['/dev/cu.*'] #  '/dev/tty.*',
     else:
         patterns = [
             '/dev/ttyUSB*',
@@ -65,11 +64,12 @@ def scan_serial_ports():
     seen = set()
     result = []
     for p in ports:
+        # Пропускаємо системний Bluetooth Incoming Port на macOS
+        if sys.platform == 'darwin': base = os.path.basename(p).lower()
+         # не показувати Bluetooth-Incoming-Port та будь-які debug-консолі (містять "debug")
+        if 'bluetooth-incoming-port' in base or 'debug' in base:
+            continue
         if p not in seen and os.path.exists(p):
             seen.add(p)
             result.append(p)
-
     return result
-
-if __name__ == '__main__':
-    print(scan_serial_ports())

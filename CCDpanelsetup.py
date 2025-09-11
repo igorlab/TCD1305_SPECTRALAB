@@ -84,6 +84,15 @@ class buildpanel(tk.Frame):
         # випадаючий список портів
         self.edevice = ttk.Combobox(self, textvariable=self.device_address, values=scan_serial_ports(), state="readonly", justify='left')
         self.edevice.grid(column=1, row=device_row)
+        # кнопка оновлення списку портів
+        def _refresh_ports():
+            ports = scan_serial_ports()
+            self.edevice['values'] = ports
+            current = self.device_address.get()
+            if current not in ports:
+                self.device_address.set(ports[0] if ports else "")
+        self.brefresh_ports = tk.Button(self, text="⟳", command=_refresh_ports)
+        self.brefresh_ports.grid(column=2, row=device_row, padx=(5, 0))
         self.ldevicestatus = tk.Label(self, textvariable=self.device_status, fg="green")
         #setup trace to check if the device exists
         self.device_address.trace("w", lambda name, index, mode, Device=self.device_address, status=self.device_status,
@@ -149,6 +158,8 @@ class buildpanel(tk.Frame):
                             else self.SHvalue.set("40") if v.get() == "20µs" # 0.02ms
                             # else self.SHvalue.set("20"), self.ICGvalue.set("200000") if v.get() == "10µs" # 0.01ms
                             else None))
+        # Значення за замовчуванням: 100µs
+        self.eintTimeVar.set("100µs")
 
         #setup ICGSH-status label
         self.lICGSH = tk.Label(self, textvariable=self.ICGSHstatus, fg="green")

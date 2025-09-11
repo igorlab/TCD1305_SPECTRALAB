@@ -26,12 +26,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-import queue
 # python imports
 import tkinter as tk
+import queue
 
-import CCDmenusetup
 # application imports
+import CCDmenusetup
 import CCDpanelsetup
 import CCDplots
 
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     SerQueue = queue.Queue()
 
-    menu = CCDmenusetup.buildmenu(root)
+    # menu = CCDmenusetup.buildmenu(root)
     CCDplot = CCDplots.buildplot(root)
     panel = CCDpanelsetup.buildpanel(root, CCDplot, SerQueue)
     panel.grid(row=0, column=2)
