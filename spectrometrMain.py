@@ -41,8 +41,8 @@ if __name__ == '__main__':
 
     SerQueue = queue.Queue()
 
-    # menu = CCDmenusetup.buildmenu(root)
-    CCDplot = CCDplots.buildplot(root)
+    menu = CCDmenusetup.buildmenu(root)
+    CCDplot = CCDplots.buildplot(root) # default sin
     panel = CCDpanelsetup.buildpanel(root, CCDplot, SerQueue)
     panel.grid(row=0, column=2)
 

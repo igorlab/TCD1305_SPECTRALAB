@@ -1,7 +1,6 @@
 #python imports
 from tkinter import messagebox
-import serial          
-import numpy as np
+import serial
 
 #application imports
 import config
@@ -80,7 +79,6 @@ def rxtxoncethread(panel, SerQueue, progress_var):
         if (config.stopsignal == 0):
             #combine received bytes into 16-bit data
             for rxi in range(3694):
-                # 
                 config.rxData16[rxi] = ((config.rxData8[2*rxi+1] << 8) + config.rxData8[2*rxi]) & 0x0FFF
 
             print('config.rxData16: ', config.rxData16)
@@ -111,7 +109,7 @@ def rxtxcontthread(panel, progress_var):
 #        threadprogress.start()
 
         #wait to clear the input and output buffers, if they're not empty data is corrupted
-        while (ser.in_waiting > 0):
+        while ser.in_waiting > 0:
            ser.reset_input_buffer()
            ser.reset_output_buffer()
            time.sleep(0.1)
@@ -134,18 +132,21 @@ def rxtxcontthread(panel, progress_var):
 
         #transmit everything at once (the USB-firmware does not work if all bytes are not transmittet in one go)
         ser.write(config.txfull)
+        print("contt ", config.txfull)
 
         #loop to acquire and plot data continuously
         while (config.stopsignal == 0):
             #wait for the firmware to return data
             config.rxData8 = ser.read(7388)
-# +            # Debug: друк перших 128 байт і загальної довжини для поточного кадру
-# +            print("rxData8 (cont):", config.rxData8[:128], "... total:", len(config.rxData8))
-#
-            if (config.stopsignal == 0):
+            # Debug: друк перших 128 байт і загальної довжини для поточного кадру
+            # print("rxData8 (cont):", config.rxData8[:128], "... total:", len(config.rxData8))
+
+            if config.stopsignal == 0:
                 #combine received bytes into 16-bit data
                 for rxi in range(3694):
                     config.rxData16[rxi] = (config.rxData8[2*rxi+1] << 8) + config.rxData8[2*rxi]
+
+                print('config.rxData16: ', config.rxData16)
 
                 #plot the new data
                 panel.bupdate.invoke()

@@ -40,6 +40,7 @@ from matplotlib.figure import Figure
 class buildplot(tk.Frame):
     def __init__(self, master):
         #create canvas
+        super().__init__(master)
         self.f = Figure(figsize=(10, 5), dpi=100, tight_layout=True)
         self.a = self.f.add_subplot(111)
         t = arange(0.0, 3.0, 0.01)
